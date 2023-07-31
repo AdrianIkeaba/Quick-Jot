@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight">
+        <!-- Other theme attributes -->
+
+        <!-- Change the color of the filled box -->
+        <item name="colorPrimary">#1E66C2</item>
+
+        <!-- Change the color of the filled box when focused -->
+        <item name="colorPrimaryDark">#1E66C2</item>
+
+        <!-- Change the color of the text -->
+        <item name="textInputStyle">@style/CustomTextInputStyle</item>
+    </style>
+
+    <!-- Custom style for the TextInputLayout text color -->
+    <style name="CustomTextInputStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textColorHint">#FFFFFF</item>
+    </style>
+
+    <style name="Theme.App" parent="Theme.AppCompat">
+        <item name="colorPrimary">@color/blue</item>
+        <item name="textInputStyle">@style/Widget.App.TextInputLayout</item>
+    </style>
+    <style name="Widget.App.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="hintTextColor">@color/white</item>
+    </style>
+    <style name="ThemeOverlay.App.TextInputLayout" parent="">
+    <item name="textAppearanceSubtitle1">@color/white</item>
+    <item name="textAppearanceCaption">@color/white</item>
+    </style>
+
+</resources>

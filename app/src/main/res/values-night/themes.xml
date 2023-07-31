@@ -1,0 +1,14 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.QuickJot" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your dark theme here. -->
+        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorPrimary">#FFFFFF</item>
+        <item name="colorAccent">#FFFFFF</item>
+        <item name="colorSecondary">#FFFFFF</item>
+        <item name="android:windowBackground">#000000</item>
+    </style>
+    <style name="WhiteFabStyle" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="android:tint">@android:color/white</item>
+    </style>
+</resources>
