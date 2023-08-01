@@ -1,8 +1,5 @@
 package com.ghostdev.quickjot.fragments
 
-import android.graphics.Color
-import android.graphics.PorterDuff
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
