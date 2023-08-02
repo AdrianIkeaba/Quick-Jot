@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/all_jots"
+        android:title="All Jots"
+        android:icon="@drawable/note"
+        />
+    <item
+        android:id="@+id/locked_jots"
+        android:title="Locked Jots"
+        android:icon="@drawable/lock" />
+</menu>

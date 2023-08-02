@@ -11,6 +11,8 @@
 
         <!-- Change the color of the text -->
         <item name="textInputStyle">@style/CustomTextInputStyle</item>
+        <item name="colorControlHighlight">#FFFFFF</item>
+        <item name="android:textColorHighlight">@android:color/white</item>
     </style>
 
     <!-- Custom style for the TextInputLayout text color -->
@@ -30,5 +32,10 @@
     <item name="textAppearanceSubtitle1">@color/white</item>
     <item name="textAppearanceCaption">@color/white</item>
     </style>
+
+    <style name="NavigationTheme" parent="AppTheme">
+    <item name="android:textSize">50sp</item>
+    <item name="android:layout_marginBottom">10dp</item>
+</style>
 
 </resources>
