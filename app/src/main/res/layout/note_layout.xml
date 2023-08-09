@@ -52,14 +52,15 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/tvNoteBody"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/tvNoteBody"
                 android:layout_marginTop="16dp"
                 android:maxHeight="170dp"
                 android:text="Type something"
-                android:textSize="16sp"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:visibility="visible" />
 
 
         </LinearLayout>

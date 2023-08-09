@@ -6,7 +6,7 @@
         <item name="colorPrimary">#FFFFFF</item>
         <item name="colorAccent">#FFFFFF</item>
         <item name="colorSecondary">#FFFFFF</item>
-        <item name="android:windowBackground">#000000</item>
+        <item name="android:windowBackground">#191E24</item>
     </style>
     <style name="WhiteFabStyle" parent="Widget.MaterialComponents.FloatingActionButton">
         <item name="android:tint">@android:color/white</item>

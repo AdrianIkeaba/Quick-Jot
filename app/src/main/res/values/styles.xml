@@ -12,7 +12,9 @@
         <!-- Change the color of the text -->
         <item name="textInputStyle">@style/CustomTextInputStyle</item>
         <item name="colorControlHighlight">#FFFFFF</item>
+        <item name="colorControlNormal">@color/white</item>
         <item name="android:textColorHighlight">@android:color/white</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
     </style>
 
     <!-- Custom style for the TextInputLayout text color -->
@@ -37,5 +39,12 @@
     <item name="android:textSize">50sp</item>
     <item name="android:layout_marginBottom">10dp</item>
 </style>
+
+    <style name="WhiteToolbarText" parent="Widget.AppCompat.Toolbar">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/black</item>
+    </style>
 
 </resources>

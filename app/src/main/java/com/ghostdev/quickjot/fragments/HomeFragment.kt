@@ -10,9 +10,9 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.ghostdev.quickjot.MainActivity
 import com.ghostdev.quickjot.R
 import com.ghostdev.quickjot.adapter.NoteAdapter
 import com.ghostdev.quickjot.databinding.FragmentHomeBinding
@@ -20,10 +20,13 @@ import com.ghostdev.quickjot.model.Note
 import com.ghostdev.quickjot.viewmodel.NoteViewModel
 
 class HomeFragment : Fragment(R.layout.fragment_home), SearchView.OnQueryTextListener {
-    private  var _binding: FragmentHomeBinding? = null
+
+    private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+
     private lateinit var notesViewModel: NoteViewModel
     private lateinit var noteAdapter: NoteAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -33,7 +36,6 @@ class HomeFragment : Fragment(R.layout.fragment_home), SearchView.OnQueryTextLis
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -41,48 +43,40 @@ class HomeFragment : Fragment(R.layout.fragment_home), SearchView.OnQueryTextLis
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        notesViewModel = (activity as MainActivity).noteViewModel
+        notesViewModel = ViewModelProvider(requireActivity()).get(NoteViewModel::class.java)
 
         setUpRecyclerView()
+
         binding.fabAddNote.setOnClickListener {
             it.findNavController().navigate(R.id.action_homeFragment_to_newNoteFragment)
         }
+
+        updateUI(emptyList())
     }
 
     private fun setUpRecyclerView() {
         noteAdapter = NoteAdapter()
 
         binding.recyclerView.apply {
-            layoutManager = StaggeredGridLayoutManager(
-                2, StaggeredGridLayoutManager.VERTICAL)
+            layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
             setHasFixedSize(true)
             adapter = noteAdapter
         }
 
-        activity.let {
-            notesViewModel.getAllNotes().observe(
-                viewLifecycleOwner
-            ) { note ->
-                noteAdapter.differ.submitList(note)
-                updateUI(note)
-            }
+        notesViewModel.getAllNotes().observe(viewLifecycleOwner) { noteList ->
+            noteAdapter.setNotes(noteList)
+            updateUI(noteList)
         }
-
     }
 
-    private fun updateUI(note: List<Note>?) {
-        if (note.isNullOrEmpty()) {
-            binding.cardView.visibility = View.VISIBLE
-            binding.recyclerView.visibility = View.GONE
-        } else {
-            binding.cardView.visibility = View.GONE
-            binding.recyclerView.visibility = View.VISIBLE
-        }
+    private fun updateUI(noteList: List<Note>) {
+        val hasUnlockedNotes = noteList.any { !it.lock }
+        binding.cardView.visibility = if (hasUnlockedNotes) View.GONE else View.VISIBLE
+        binding.recyclerView.visibility = if (hasUnlockedNotes) View.VISIBLE else View.GONE
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-
         menu.clear()
         inflater.inflate(R.menu.home_menu, menu)
 
@@ -100,8 +94,9 @@ class HomeFragment : Fragment(R.layout.fragment_home), SearchView.OnQueryTextLis
         if (newText.isNullOrEmpty()) {
             // If the query is empty or null, show all notes by loading the complete list again
             notesViewModel.getAllNotes().observe(viewLifecycleOwner) { noteList ->
-                noteAdapter.differ.submitList(noteList)
-                updateUI(noteList)
+                val unlockedNotes = noteList.filter { note -> !note.lock }
+                noteAdapter.differ.submitList(unlockedNotes)
+                updateUI(unlockedNotes)
             }
         } else {
             // Perform the search for non-empty query
@@ -110,17 +105,8 @@ class HomeFragment : Fragment(R.layout.fragment_home), SearchView.OnQueryTextLis
         return true
     }
 
-    private fun searchNote(query: String?) {
-        val searchQuery = "%$query"
-        notesViewModel.searchNotes(query).observe(
-            this
-        ) { list ->
-            noteAdapter.differ.submitList(list)
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
     }
 
@@ -129,6 +115,17 @@ class HomeFragment : Fragment(R.layout.fragment_home), SearchView.OnQueryTextLis
             AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in)
         } else {
             AnimationUtils.loadAnimation(requireContext(), R.anim.fade_out)
+        }
+    }
+    private fun searchNote(query: String?) {
+        val searchQuery = "%$query" // Make sure you use the correct query format here
+
+        // Retrieve only unlocked notes that match the search query
+        notesViewModel.searchNotes(searchQuery).observe(
+            this
+        ) { list ->
+            val unlockedNotes = list.filter { note -> !note.lock }
+            noteAdapter.differ.submitList(unlockedNotes)
         }
     }
 }

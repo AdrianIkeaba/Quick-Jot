@@ -8,7 +8,7 @@
         <item name="colorSecondary">#FFFFFF</item>
         <item name="colorOnPrimary">#FFFFFF</item>
         <item name="android:tint">@android:color/white</item>
-        <item name="android:windowBackground">#000000</item>
+        <item name="android:windowBackground">#191E24</item>
     </style>
     <style name="Theme.QuickJot" parent="Base.Theme.QuickJot" />
     <style name="WhiteFabStyle" parent="Widget.MaterialComponents.FloatingActionButton">

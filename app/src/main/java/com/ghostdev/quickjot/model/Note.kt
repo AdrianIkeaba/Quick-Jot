@@ -14,5 +14,7 @@ data class Note(
     @ColumnInfo("noteTitle")
     val noteTitle: String,
     @ColumnInfo("noteBody")
-    val noteBody: String
+    val noteBody: String,
+    @ColumnInfo("lock")
+    val lock: Boolean
 ): Parcelable

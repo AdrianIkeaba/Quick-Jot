@@ -6,9 +6,12 @@ import android.text.SpannableString
 import android.text.style.RelativeSizeSpan
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.ImageView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
@@ -29,6 +32,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var drawerToggle: ActionBarDrawerToggle
+    private lateinit var firstMenuItem: MenuItem
+    private lateinit var secondMenuItem: MenuItem
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,8 +45,9 @@ class MainActivity : AppCompatActivity() {
         binding.toolbar.setTitleTextColor(Color.WHITE)
         window.statusBarColor = ContextCompat.getColor(this, R.color.black)
 
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+
+
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         val navController = navHostFragment.navController
         drawerLayout = binding.drawerLayout
 
@@ -62,13 +68,16 @@ class MainActivity : AppCompatActivity() {
         // Set up the toolbar with the NavController and AppBarConfiguration
         NavigationUI.setupWithNavController(binding.toolbar, navController, appBarConfiguration)
 
+        firstMenuItem = binding.navigationView.menu.getItem(0)
+        secondMenuItem= binding.navigationView.menu.getItem(1)
+
         // Add the OnDestinationChangedListener
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.homeFragment -> {
                     supportActionBar?.title = "All Jots"
-                    val firstMenuItem: MenuItem = binding.navigationView.menu.getItem(0)
                     firstMenuItem.isChecked = true
+                    secondMenuItem.isChecked = false
                 }
                 R.id.updateNoteFragment -> {
                     supportActionBar?.title = "Update Jot"
@@ -76,7 +85,19 @@ class MainActivity : AppCompatActivity() {
                 R.id.newNoteFragment -> {
                     supportActionBar?.title = "New Jot"
                 }
-                else -> {
+                R.id.lockedNoteFragment -> {
+                    supportActionBar?.title = "Locked Jots"
+                    secondMenuItem.isChecked = true
+                    firstMenuItem.isChecked = false
+                    drawerToggle.isDrawerIndicatorEnabled = true
+
+                }
+                R.id.settingsFragment -> {
+                    supportActionBar?.title = "Settings"
+                    secondMenuItem.isChecked = false
+                    firstMenuItem.isChecked = false
+                    drawerToggle.isDrawerIndicatorEnabled = true
+                } else -> {
                     supportActionBar?.title = "All Jots"
                 }
             }
@@ -87,6 +108,20 @@ class MainActivity : AppCompatActivity() {
        binding.navigationView.inflateHeaderView(R.layout.nav_drawer_header)
 
         val navView: NavigationView = binding.navigationView
+        navView.setNavigationItemSelectedListener{
+
+            when (it.itemId) {
+                R.id.all_jots -> {
+                    navController.navigate(R.id.homeFragment)
+                }
+                R.id.locked_jots -> {
+                    navController.navigate(R.id.lockedNoteFragment)
+                }
+            }
+            drawerLayout.closeDrawers()
+            true
+        }
+
         val menu: Menu = navView.menu
         for (i in 0 until menu.size()) {
                 val menuItem: MenuItem = menu.getItem(i)
@@ -94,12 +129,20 @@ class MainActivity : AppCompatActivity() {
                 spanString.setSpan(RelativeSizeSpan(1.25f), 0, spanString.length, 0)
                 menuItem.title = spanString
         }
+        val headerView: View = navView.getHeaderView(0)
+        val settingHeader: ImageView = headerView.findViewById(R.id.settings)
+
+        settingHeader.setOnClickListener {
+            val navigationController = findNavController(R.id.fragmentContainerView)
+            navigationController.navigate(R.id.action_homeFragment_to_settingsFragment)
+            drawerLayout.closeDrawers()
+        }
     }
 
     private fun setUpViewModel() {
         val notesRepository = NotesRepository(NoteDatabase(this))
         val viewModelProviderFactory = NoteViewModelFactory(application, notesRepository)
-        noteViewModel = ViewModelProvider(this, viewModelProviderFactory).get(NoteViewModel::class.java)
+        noteViewModel = ViewModelProvider(this, viewModelProviderFactory)[NoteViewModel::class.java]
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -110,12 +153,5 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.fragmentContainerView)
         return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp()
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (drawerToggle.onOptionsItemSelected(item)) {
-            return true
-        }
-        return super.onOptionsItemSelected(item)
     }
 }

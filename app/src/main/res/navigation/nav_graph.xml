@@ -16,6 +16,12 @@
         <action
             android:id="@+id/action_homeFragment_to_updateNoteFragment"
             app:destination="@id/updateNoteFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_lockedNoteFragment"
+            app:destination="@id/lockedNoteFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/newNoteFragment"
@@ -33,6 +39,42 @@
         tools:layout="@layout/fragment_update_note" >
         <action
             android:id="@+id/action_updateNoteFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_updateNoteFragment_to_lockedNoteFragment"
+            app:destination="@id/lockedNoteFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/lockedNoteFragment"
+        android:name="com.ghostdev.quickjot.fragments.LockedNoteFragment"
+        android:label="fragment_locked_note"
+        tools:layout="@layout/fragment_locked_note" >
+        <action
+            android:id="@+id/action_lockedNoteFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_lockedNoteFragment_to_updateNoteFragment"
+            app:destination="@id/updateNoteFragment" />
+        <action
+            android:id="@+id/action_lockedNoteFragment_to_lockedNewNote"
+            app:destination="@id/lockedNewNote" />
+    </fragment>
+    <fragment
+        android:id="@+id/lockedNewNote"
+        android:name="com.ghostdev.quickjot.fragments.LockedNewNoteFragment"
+        android:label="fragment_locked_new_note"
+        tools:layout="@layout/fragment_locked_new_note" >
+        <action
+            android:id="@+id/action_lockedNewNote_to_lockedNoteFragment"
+            app:destination="@id/lockedNoteFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.ghostdev.quickjot.fragments.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settingsFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
 

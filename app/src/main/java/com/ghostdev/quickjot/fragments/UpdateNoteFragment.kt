@@ -49,15 +49,21 @@ class UpdateNoteFragment : Fragment() {
         binding.etNoteTitleUpdate.setText(currentNote.noteTitle)
         binding.etNoteBodyUpdate.setText(currentNote.noteBody)
 
-        //iF USER UPDATES THE NOTES
+        //IF USER UPDATES THE NOTES
         binding.fabDone.setOnClickListener {
             val title = binding.etNoteTitleUpdate.text.toString().trim()
             val body = binding.etNoteBodyUpdate.text.toString().trim()
 
             if (title.isNotEmpty()) {
-                val note = Note(currentNote.id, title, body)
-                notesViewModel.updateNote(note)
-                view.findNavController().navigate(R.id.action_updateNoteFragment_to_homeFragment)
+                if (currentNote.lock) {
+                    val note = Note(currentNote.id, title, body, true)
+                    notesViewModel.updateNote(note)
+                    view.findNavController().navigate(R.id.action_updateNoteFragment_to_lockedNoteFragment)
+                } else {
+                    val note = Note(currentNote.id, title, body, false)
+                    notesViewModel.updateNote(note)
+                    view.findNavController().navigate(R.id.action_updateNoteFragment_to_homeFragment)
+                }
             } else {
                 Toast.makeText(context, "Title?", Toast.LENGTH_SHORT).show()
             }
@@ -70,7 +76,11 @@ class UpdateNoteFragment : Fragment() {
             setMessage("This masterpiece will be deleted")
             setPositiveButton("Delete") {_, _ ->
                 notesViewModel.deleteNote(currentNote)
-                view?.findNavController()?.navigate(R.id.action_updateNoteFragment_to_homeFragment)
+                if (currentNote.lock) {
+                    view?.findNavController()?.navigate(R.id.action_updateNoteFragment_to_lockedNoteFragment)
+                } else {
+                    view?.findNavController()?.navigate(R.id.action_updateNoteFragment_to_homeFragment)
+                }
             }
             setNegativeButton("Cancel", null)
         }.create().show()

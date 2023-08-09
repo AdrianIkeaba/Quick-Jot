@@ -44,17 +44,19 @@ class NoteAdapter(): RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         val currentNote = differ.currentList[position]
 
-        holder.itemBinding.tvNoteTitle.text = currentNote.noteTitle
-        holder.itemBinding.tvNoteBody.text = currentNote.noteBody
+        if (!currentNote.lock) {
+            holder.itemBinding.tvNoteTitle.text = currentNote.noteTitle
+            holder.itemBinding.tvNoteBody.text = currentNote.noteBody
 
-        val random = Random()
-        val color = Color.argb(255,
-            random.nextInt(256),
-            random.nextInt(256),
-            random.nextInt(256))
+            val random = Random()
+            val color = Color.argb(255,
+                random.nextInt(256),
+                random.nextInt(256),
+                random.nextInt(256))
 
+            holder.itemBinding.ibColor.setBackgroundColor(color)
+        }
 
-        holder.itemBinding.ibColor.setBackgroundColor(color)
         holder.itemView.setOnClickListener {
             val bundle = Bundle()
             bundle.putParcelable("note", currentNote!!)
@@ -64,5 +66,9 @@ class NoteAdapter(): RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
             it.findNavController().navigate(R.id.action_homeFragment_to_updateNoteFragment, bundle)
 
         }
+    }
+    fun setNotes(notes: List<Note>) {
+        val notLockedNotes = notes.filter { !it.lock }
+        differ.submitList(notLockedNotes)
     }
 }
